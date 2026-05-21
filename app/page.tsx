@@ -45,34 +45,62 @@ type Video = {
 
 function VideoCard({ video, index }: { video: Video; index: number }) {
   return (
-    <motion.div>
-      ...
-    </motion.div>
-  );
-}
-    <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }}>
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08 }}
+    >
       <Card className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl shadow-red-950/20">
         <div className={`relative h-44 bg-gradient-to-br ${video.accent}`}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.18),transparent_26%),linear-gradient(120deg,rgba(0,0,0,.2),rgba(0,0,0,.85))]" />
-          <div className="absolute left-4 top-4 rounded-full border border-yellow-400/30 bg-black/60 px-3 py-1 text-xs font-semibold text-yellow-200 backdrop-blur">{video.tag}</div>
+
+          <div className="absolute left-4 top-4 rounded-full border border-yellow-400/30 bg-black/60 px-3 py-1 text-xs font-semibold text-yellow-200 backdrop-blur">
+            {video.tag}
+          </div>
+
           <button className="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-yellow-300/40 bg-red-700/80 shadow-lg shadow-red-700/40">
             <Play className="ml-1 h-7 w-7 fill-white text-white" />
           </button>
-          <div className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-xs text-white">{video.time}</div>
+
+          <div className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-xs text-white">
+            {video.time}
+          </div>
         </div>
+
         <CardContent className="space-y-4 p-4">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">{video.type}</div>
-            <h3 className="mt-1 text-lg font-bold text-white">{video.title}</h3>
+            <div className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
+              {video.type}
+            </div>
+            <h3 className="mt-1 text-lg font-bold text-white">
+              {video.title}
+            </h3>
           </div>
+
           <div className="grid grid-cols-3 gap-2 text-xs">
-            <div className="rounded-xl bg-white/5 p-2 text-zinc-300"><Eye className="mb-1 h-4 w-4 text-yellow-300" />{video.views}</div>
-            <div className="rounded-xl bg-white/5 p-2 text-zinc-300"><Wallet className="mb-1 h-4 w-4 text-yellow-300" />{video.revenue}</div>
-            <div className="rounded-xl bg-white/5 p-2 text-zinc-300"><Zap className="mb-1 h-4 w-4 text-red-400" />Pulse {video.pulse}</div>
+            <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
+              <Eye className="mb-1 h-4 w-4 text-yellow-300" />
+              {video.views}
+            </div>
+
+            <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
+              <Wallet className="mb-1 h-4 w-4 text-yellow-300" />
+              {video.revenue}
+            </div>
+
+            <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
+              <Zap className="mb-1 h-4 w-4 text-red-400" />
+              Pulse {video.pulse}
+            </div>
           </div>
+
           <div className="flex items-center gap-3 text-zinc-400">
-            <Heart className="h-4 w-4" /><MessageCircle className="h-4 w-4" /><Share2 className="h-4 w-4" />
-            <span className="ml-auto text-xs text-yellow-200">Autoplay ready</span>
+            <Heart className="h-4 w-4" />
+            <MessageCircle className="h-4 w-4" />
+            <Share2 className="h-4 w-4" />
+            <span className="ml-auto text-xs text-yellow-200">
+              Autoplay ready
+            </span>
           </div>
         </CardContent>
       </Card>
