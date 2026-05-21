@@ -32,8 +32,24 @@ const algorithmSignals = [
   ["Shares", "44K", "+37%"],
 ];
 
-function VideoCard({ video, index }) {
+type Video = {
+  title: string;
+  type: string;
+  views: string;
+  revenue: string;
+  pulse: number;
+  tag: string;
+  time: string;
+  accent: string;
+};
+
+function VideoCard({ video, index }: { video: Video; index: number }) {
   return (
+    <motion.div>
+      ...
+    </motion.div>
+  );
+}
     <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }}>
       <Card className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl shadow-red-950/20">
         <div className={`relative h-44 bg-gradient-to-br ${video.accent}`}>
