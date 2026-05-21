@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const videos = [
-  { title: "BNZ Visuals: Storm To Gold", type: "BNZ Originals™", views: "1.8M", revenue: "$4,820", pulse: 98, tag: "Exclusive Premiere", time: "3:05", accent: "from-red-600/40 to-yellow-500/20" },
+  { title: "Boss Moves — From Downfall to Divine Elevation", type: "BNZ Originals™", views: "1.8M", revenue: "$4,820", pulse: 98, tag: "Exclusive Premiere", time: "0:28", accent: "from-red-600/40 to-yellow-500/20" },
   { title: "Toronto Rooftop Victory Film", type: "Music Film", views: "912K", revenue: "$2,114", pulse: 91, tag: "Trending Global", time: "2:58", accent: "from-yellow-500/30 to-red-700/20" },
   { title: "BNZ Live: Behind The Visuals", type: "BNZ Live™", views: "388K", revenue: "$876", pulse: 85, tag: "Livestream Replay", time: "41:22", accent: "from-red-900/40 to-black" },
   { title: "Fashion Drop: Black Gold Era", type: "Fashion", views: "211K", revenue: "$529", pulse: 79, tag: "Merch Spotlight", time: "6:18", accent: "from-zinc-900 to-yellow-700/20" },
