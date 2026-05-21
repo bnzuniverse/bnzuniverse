@@ -51,22 +51,15 @@ function VideoCard({ video, index }: { video: Video; index: number }) {
       transition={{ delay: index * 0.08 }}
     >
       <Card className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl shadow-red-950/20">
-        <div className={`relative h-44 bg-gradient-to-br ${video.accent}`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.18),transparent_26%),linear-gradient(120deg,rgba(0,0,0,.2),rgba(0,0,0,.85))]" />
-
-          <div className="absolute left-4 top-4 rounded-full border border-yellow-400/30 bg-black/60 px-3 py-1 text-xs font-semibold text-yellow-200 backdrop-blur">
-            {video.tag}
-          </div>
-
-          <button className="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-yellow-300/40 bg-red-700/80 shadow-lg shadow-red-700/40">
-            <Play className="ml-1 h-7 w-7 fill-white text-white" />
-          </button>
-
-          <div className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-xs text-white">
-            {video.time}
-          </div>
-        </div>
-
+       <div className="relative overflow-hidden rounded-t-2xl aspect-video">
+  <iframe
+    src="https://customer-b3btgo3u087fuuxk.cloudflarestream.com/e2cefc05d2d6fa6dbf21a319c85d9035/iframe?poster=https%3A%2F%2Fcustomer-b3btgo3u087fuuxk.cloudflarestream.com%2Fe2cefc05d2d6fa6dbf21a319c85d9035%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D600"
+    loading="lazy"
+    className="absolute inset-0 h-full w-full"
+    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+    allowFullScreen
+  ></iframe>
+</div>
         <CardContent className="space-y-4 p-4">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
