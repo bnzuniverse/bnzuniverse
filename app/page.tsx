@@ -1,17 +1,41 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Play, Search, Bell, User, Crown, Radio, Clapperboard, Gamepad2, Shirt, Mic2, Film, BarChart3, Wallet, TrendingUp, Eye, Heart, MessageCircle, Share2, Sparkles, Zap, Globe2, DollarSign, Clock, Upload, Settings, ChevronRight } from "lucide-react";
+
+import {
+  Play,
+  Search,
+  Bell,
+  User,
+  Crown,
+  Radio,
+  Clapperboard,
+  Gamepad2,
+  Shirt,
+  Mic2,
+  Film,
+  BarChart3,
+  Wallet,
+  TrendingUp,
+  Eye,
+  Heart,
+  MessageCircle,
+  Share2,
+  Sparkles,
+  Zap,
+  Globe2,
+  DollarSign,
+  Clock,
+  Upload,
+  Settings,
+  ChevronRight
+} from "lucide-react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-const videos = [
-  { title: "Boss Moves — From Downfall to Divine Elevation", type: "BNZ Originals™", views: "1.8M", revenue: "$4,820", pulse: 98, tag: "Exclusive Premiere", time: "0:28", accent: "from-red-600/40 to-yellow-500/20" },
-  { title: "Toronto Rooftop Victory Film", type: "Music Film", views: "912K", revenue: "$2,114", pulse: 91, tag: "Trending Global", time: "2:58", accent: "from-yellow-500/30 to-red-700/20" },
-  { title: "BNZ Live: Behind The Visuals", type: "BNZ Live™", views: "388K", revenue: "$876", pulse: 85, tag: "Livestream Replay", time: "41:22", accent: "from-red-900/40 to-black" },
-  { title: "Fashion Drop: Black Gold Era", type: "Fashion", views: "211K", revenue: "$529", pulse: 79, tag: "Merch Spotlight", time: "6:18", accent: "from-zinc-900 to-yellow-700/20" },
-];
 
 const categories = [
   { icon: Clapperboard, label: "Music Videos" },
@@ -32,15 +56,28 @@ const algorithmSignals = [
   ["Shares", "44K", "+37%"],
 ];
 
+const nav = [
+  "Home",
+  "Trending",
+  "BNZ Originals™",
+  "BNZ Live™",
+  "Subscriptions",
+];
+
+
 type Video = {
+  id: string;
   title: string;
-  type: string;
-  views: string;
-  revenue: string;
-  pulse: number;
-  tag: string;
-  time: string;
-  accent: string;
+  description?: string;
+  video_url: string;
+  thumbnail_url?: string;
+  views?: number;
+  likes?: number;
+  category?: string;
+  revenue?: string;
+  pulse?: number;
+  tag?: string;
+  time?: string;
 };
 
 function VideoCard({ video, index }: { video: Video; index: number }) {
@@ -51,51 +88,76 @@ function VideoCard({ video, index }: { video: Video; index: number }) {
       transition={{ delay: index * 0.08 }}
     >
       <Card className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl shadow-red-950/20">
-       <div className="relative overflow-hidden rounded-t-2xl aspect-video">
-  <iframe
-    src="https://customer-b3btgo3u087fuuxk.cloudflarestream.com/e2cefc05d2d6fa6dbf21a319c85d9035/iframe?poster=https%3A%2F%2Fcustomer-b3btgo3u087fuuxk.cloudflarestream.com%2Fe2cefc05d2d6fa6dbf21a319c85d9035%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D600"
-    loading="lazy"
-    className="absolute inset-0 h-full w-full"
-    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-    allowFullScreen
-  ></iframe>
-</div>
+
+        <div className="relative overflow-hidden rounded-t-2xl aspect-video">
+          <iframe
+            src={video.video_url}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowFullScreen
+          ></iframe>
+        </div>
+
         <CardContent className="space-y-4 p-4">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
-              {video.type}
+
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
+                {video.category || "BNZ Originals™"}
+              </div>
+
+              <div className="rounded-full border border-yellow-400/30 bg-black/60 px-3 py-1 text-[10px] font-semibold text-yellow-200 backdrop-blur">
+                {video.tag || "Exclusive Premiere"}
+              </div>
             </div>
-            <h3 className="mt-1 text-lg font-bold text-white">
+
+            <h3 className="mt-2 text-lg font-bold text-white">
               {video.title}
             </h3>
+
+            <p className="mt-2 text-sm text-zinc-400">
+              {video.description || "BNZUNIVERSE™ cinematic experience"}
+            </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-xs">
+          <div className="grid grid-cols-4 gap-2 text-xs">
+
             <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
               <Eye className="mb-1 h-4 w-4 text-yellow-300" />
-              {video.views}
+              {video.views || 0}
+            </div>
+
+            <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
+              <Heart className="mb-1 h-4 w-4 text-red-400" />
+              {video.likes || 0}
             </div>
 
             <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
               <Wallet className="mb-1 h-4 w-4 text-yellow-300" />
-              {video.revenue}
+              {video.revenue || "$0"}
             </div>
 
             <div className="rounded-xl bg-white/5 p-2 text-zinc-300">
               <Zap className="mb-1 h-4 w-4 text-red-400" />
-              Pulse {video.pulse}
+              Pulse {video.pulse || 0}
             </div>
+
           </div>
 
           <div className="flex items-center gap-3 text-zinc-400">
-            <Heart className="h-4 w-4" />
+
             <MessageCircle className="h-4 w-4" />
             <Share2 className="h-4 w-4" />
-            <span className="ml-auto text-xs text-yellow-200">
-              Autoplay ready
+
+            <span className="ml-auto rounded-md bg-black/70 px-2 py-1 text-xs text-yellow-200">
+              {video.time || "0:28"}
             </span>
+
           </div>
+
         </CardContent>
+
       </Card>
     </motion.div>
   );
@@ -103,9 +165,28 @@ function VideoCard({ video, index }: { video: Video; index: number }) {
 
 export default function BNZUniversePrototype() {
   const [active, setActive] = useState("Home");
-  const nav = ["Home", "Trending", "BNZ Originals™", "BNZ Live™", "Monetization", "Analytics"];
-  const totalRevenue = useMemo(() => "$8,339", []);
+  const [videos, setVideos] = useState<any[]>([]);
 
+  useEffect(() => {
+    async function fetchVideos() {
+      const { data, error } = await supabase
+        .from("videos")
+        .select("*");
+
+      if (data) {
+        setVideos(data);
+      }
+
+      if (error) {
+        console.error(error);
+      }
+    }
+
+    fetchVideos();
+  }, []);
+
+  const totalRevenue = useMemo(() => "$8,339", []);
+  
   return (
     <div className="min-h-screen bg-black text-white selection:bg-red-600/60">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_70%_10%,rgba(201,31,31,.35),transparent_28%),radial-gradient(circle_at_20%_0%,rgba(245,178,54,.18),transparent_24%),linear-gradient(180deg,#080808,#0a0a0a_45%,#000)]" />
@@ -220,7 +301,13 @@ export default function BNZUniversePrototype() {
             <Button variant="outline" className="rounded-full border-white/10 bg-white/5 text-white hover:bg-white/10">See all</Button>
           </div>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {videos.map((video, index) => <VideoCard key={video.title} video={video} index={index} />)}
+            {videos.map((video: any, index: number) => (
+  <VideoCard
+    key={video.id}
+    video={video}
+    index={index}
+  />
+))}
           </div>
         </section>
 
