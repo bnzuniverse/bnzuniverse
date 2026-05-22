@@ -1,7 +1,6 @@
 "use client";
 
-import { supabase } from "@/lib/supabase";
-
+import { supabase } from "@/src/lib/supabase";
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -80,6 +79,14 @@ type Video = {
   time?: string;
 };
 
+async function trackView(videoId: string) {
+  await supabase.from("views").insert([
+    {
+      video_id: videoId,
+    },
+  ]);
+}
+
 function VideoCard({ video, index }: { video: Video; index: number }) {
   return (
     <motion.div
@@ -89,7 +96,10 @@ function VideoCard({ video, index }: { video: Video; index: number }) {
     >
       <Card className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl shadow-red-950/20">
 
-        <div className="relative overflow-hidden rounded-t-2xl aspect-video">
+        <div 
+           onClick={() => trackView(video.id)}
+           className="relative overflow-hidden rounded-t-2xl aspect-video cursor-pointer"
+    >          
           <iframe
             src={video.video_url}
             loading="lazy"
@@ -167,23 +177,41 @@ export default function BNZUniversePrototype() {
   const [active, setActive] = useState("Home");
   const [videos, setVideos] = useState<any[]>([]);
 
-  useEffect(() => {
-    async function fetchVideos() {
-      const { data, error } = await supabase
-        .from("videos")
-        .select("*");
+ useEffect(() => {
+  async function fetchVideos() {
+    const { data, error } = await supabase.from("videos").select("*");
+  
 
-      if (data) {
-        setVideos(data);
-      }
+    if (error) return;
 
-      if (error) {
-        console.error(error);
-      }
-    }
+    setVideos(data || []);
+  }
 
-    fetchVideos();
-  }, []);
+  fetchVideos();
+}, []);
+
+async function trackView(videoId: string, currentViews: number = 0) {
+  await supabase.from("views").insert([
+    {
+      video_id: videoId,
+    },
+  ]);
+
+  await supabase
+    .from("videos")
+    .update({
+      views: currentViews + 1,
+    })
+    .eq("id", videoId);
+
+  setVideos((prev) =>
+    prev.map((video) =>
+      video.id === videoId
+        ? { ...video, views: currentViews + 1 }
+        : video
+    )
+  );
+}
 
   const totalRevenue = useMemo(() => "$8,339", []);
   
@@ -297,18 +325,42 @@ export default function BNZUniversePrototype() {
             <div>
               <div className="text-xs uppercase tracking-[0.28em] text-red-400">Featured + Trending</div>
               <h2 className="mt-2 text-3xl font-black">Powered by BNZ Pulse™ Recommendations</h2>
+
+              
             </div>
             <Button variant="outline" className="rounded-full border-white/10 bg-white/5 text-white hover:bg-white/10">See all</Button>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {videos.map((video: any, index: number) => (
-  <VideoCard
-    key={video.id}
-    video={video}
-    index={index}
-  />
-))}
-          </div>
+         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          
+
+
+  {videos.map((video) => (
+     <Card
+  key={video.id}
+  onClick={() => trackView(video.id, video.views || 0)}
+  className="overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 cursor-pointer"
+>
+      <div className="relative aspect-video overflow-hidden">
+        <iframe
+          src={video.video_url}
+          className="absolute inset-0 h-full w-full"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+          allowFullScreen
+        ></iframe>
+      </div>
+
+      <div className="space-y-2 p-4">
+        <h3 className="text-lg font-bold text-white">{video.title}</h3>
+        <p className="text-sm text-zinc-400">{video.description}</p>
+
+        <div className="flex items-center justify-between pt-2 text-sm text-yellow-400">
+          <span>{video.category}</span>
+      <span>{video.views || 0} views</span>
+        </div>
+      </div>
+    </Card>
+  ))}
+</div>
         </section>
 
         <section className="mt-10 grid gap-6 lg:grid-cols-3">
