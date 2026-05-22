@@ -197,13 +197,16 @@ async function trackView(videoId: string, currentViews: number = 0) {
     },
   ]);
 
-  await supabase
-    .from("videos")
-    .update({
-      views: currentViews + 1,
-    })
-    .eq("id", videoId);
+  const currentVideo = videos.find((v) => v.id === videoId);
 
+await supabase
+  .from("videos")
+  .update({
+    views: (currentVideo?.views || 0) + 1,
+  })
+  .eq("id", videoId);
+
+  
   setVideos((prev) =>
     prev.map((video) =>
       video.id === videoId
